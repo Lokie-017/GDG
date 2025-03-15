@@ -127,7 +127,7 @@ elif selected_chart == "Neural Network":
 
         # One-hot encode categorical columns
         categorical_cols = ["department", "region", "education", "gender", "recruitment_channel"]
-        encoder = OneHotEncoder(drop="first", sparse=False)
+        encoder = OneHotEncoder(drop="first")
         X_encoded = encoder.fit_transform(X[categorical_cols])
 
         # Convert numerical features to numpy array
