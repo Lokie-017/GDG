@@ -19,6 +19,7 @@ st.sidebar.header("🔍 Select a Visualization")
 selected_chart = st.sidebar.selectbox(
     "Choose a chart:", 
     [
+        "KNN"
         "Gender Distribution", 
         "Region-wise Employee Count", 
         "Education Level Distribution", 
@@ -29,6 +30,76 @@ selected_chart = st.sidebar.selectbox(
         "Department-wise Employee Count"
     ]
 )
+
+elif selected_chart == "KNN":
+    st.title("Employee Promotion Prediction Using KNN")
+    # Upload dataset
+    uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
+    if uploaded_file is not None:
+        # Load the dataset
+        df = pd.read_csv(uploaded_file)
+
+        # Handle missing values
+        df.fillna(method='ffill', inplace=True)
+
+        # Encode categorical variables
+        label_encoders = {}
+        for col in df.select_dtypes(include=['object']).columns:
+            le = LabelEncoder()
+            df[col] = le.fit_transform(df[col])
+            label_encoders[col] = le
+
+        # Define features and target variable
+        X = df.drop(columns=['is_promoted'])  # Adjust column name if needed
+        y = df['is_promoted']
+
+        # Split the data
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Scale features
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
+
+        # Train a KNN model
+        model = KNeighborsClassifier(n_neighbors=5)
+        model.fit(X_train, y_train)
+
+        # Make predictions
+        y_pred = model.predict(X_test)
+
+        # Evaluate the model
+        accuracy = accuracy_score(y_test, y_pred)
+        classification_rep = classification_report(y_test, y_pred)
+
+        # Display results
+        st.subheader("Model Performance")
+        st.write(f"### Accuracy: {accuracy:.2f}")
+        st.text("Classification Report:")
+        st.text(classification_rep)
+
+        # Identify employees likely to be promoted
+        X_test_df = pd.DataFrame(X_test, columns=X.columns)
+        X_test_df['Predicted_Promotion'] = y_pred
+        X_test_df['Actual_Promotion'] = y_test.values
+
+        # Filter employees predicted for promotion
+        promoted_employees = X_test_df[X_test_df['Predicted_Promotion'] == 1]
+
+        # Display promoted employees
+        st.subheader("Employees Predicted for Promotion")
+        st.dataframe(promoted_employees.head(10))
+
+        # Convert to CSV
+        promoted_csv = promoted_employees.to_csv(index=False).encode('utf-8')
+
+        # Provide a download button
+        st.download_button(
+            label="Download Predicted Promotions as CSV",
+            data=promoted_csv,
+            file_name="predicted_promotions.csv",
+            mime="text/csv"
+        )
 
 # Gender Distribution
 if selected_chart == "Gender Distribution":
@@ -118,76 +189,3 @@ elif selected_chart == "Department-wise Employee Count":
         plt.xticks(rotation=45)
         ax.grid(axis='y', linestyle='--', alpha=0.7)
         st.pyplot(fig)
-
-
-# Streamlit App Title
-st.title("Employee Promotion Prediction Using KNN")
-
-# Upload dataset
-uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
-
-if uploaded_file is not None:
-    # Load the dataset
-    df = pd.read_csv(uploaded_file)
-
-    # Handle missing values
-    df.fillna(method='ffill', inplace=True)
-
-    # Encode categorical variables
-    label_encoders = {}
-    for col in df.select_dtypes(include=['object']).columns:
-        le = LabelEncoder()
-        df[col] = le.fit_transform(df[col])
-        label_encoders[col] = le
-
-    # Define features and target variable
-    X = df.drop(columns=['is_promoted'])  # Adjust column name if needed
-    y = df['is_promoted']
-
-    # Split the data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # Scale features
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_train)
-    X_test = scaler.transform(X_test)
-
-    # Train a KNN model
-    model = KNeighborsClassifier(n_neighbors=5)
-    model.fit(X_train, y_train)
-
-    # Make predictions
-    y_pred = model.predict(X_test)
-
-    # Evaluate the model
-    accuracy = accuracy_score(y_test, y_pred)
-    classification_rep = classification_report(y_test, y_pred)
-
-    # Display results
-    st.subheader("Model Performance")
-    st.write(f"### Accuracy: {accuracy:.2f}")
-    st.text("Classification Report:")
-    st.text(classification_rep)
-
-    # Identify employees likely to be promoted
-    X_test_df = pd.DataFrame(X_test, columns=X.columns)
-    X_test_df['Predicted_Promotion'] = y_pred
-    X_test_df['Actual_Promotion'] = y_test.values
-
-    # Filter employees predicted for promotion
-    promoted_employees = X_test_df[X_test_df['Predicted_Promotion'] == 1]
-
-    # Display promoted employees
-    st.subheader("Employees Predicted for Promotion")
-    st.dataframe(promoted_employees.head(10))
-
-    # Convert to CSV
-    promoted_csv = promoted_employees.to_csv(index=False).encode('utf-8')
-
-    # Provide a download button
-    st.download_button(
-        label="Download Predicted Promotions as CSV",
-        data=promoted_csv,
-        file_name="predicted_promotions.csv",
-        mime="text/csv"
-    )
