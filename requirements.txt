@@ -4,5 +4,4 @@ matplotlib
 scikit-learn
 tensorflow
 seaborn
-os
 plotly
