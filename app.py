@@ -1,46 +1,59 @@
+import streamlit as st
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the dataset
 data_path = 'train.csv'
 df = pd.read_csv(data_path)
 
+# Streamlit app title
+st.title("Employee Data Visualization")
 
-# Plot number of males and females
-if 'gender' in df.columns:
-    gender_counts = df['gender'].value_counts()
-    plt.bar(gender_counts.index, gender_counts.values, color=['blue', 'pink'])
-    plt.xlabel('Gender')
-    plt.ylabel('Count')
-    plt.title('Number of Males and Females')
-    plt.show()
+# Sidebar for user selection
+st.sidebar.header("Visualization Options")
+selected_chart = st.sidebar.selectbox("Select a chart to display:", 
+                                      ["Gender Distribution", "Region Distribution", "Education Distribution", "Promoted Employees by Region"])
 
-# Plot number of people by region
-if 'region' in df.columns:
-    region_counts = df['region'].value_counts()
-    plt.bar(region_counts.index, region_counts.values, color='green')
-    plt.xlabel('Region')
-    plt.ylabel('Number of People')
-    plt.title('Number of People by Region')
-    plt.xticks(rotation=90)
-    plt.show()
+# Gender Distribution
+if selected_chart == "Gender Distribution":
+    if 'gender' in df.columns:
+        gender_counts = df['gender'].value_counts()
+        fig, ax = plt.subplots()
+        ax.bar(gender_counts.index, gender_counts.values, color=['blue', 'pink'])
+        ax.set_xlabel('Gender')
+        ax.set_ylabel('Count')
+        ax.set_title('Number of Males and Females')
+        st.pyplot(fig)
 
-# Plot education distribution in pie chart
-if 'education' in df.columns:
-    education_counts = df['education'].value_counts()
-    plt.figure(figsize=(8, 8))
-    plt.pie(education_counts.values, labels=education_counts.index, autopct='%1.1f%%', colors=['gold', 'lightblue', 'lightgreen'])
-    plt.title('Education Distribution')
-    plt.show()
+# Region Distribution
+elif selected_chart == "Region Distribution":
+    if 'region' in df.columns:
+        region_counts = df['region'].value_counts()
+        fig, ax = plt.subplots()
+        ax.bar(region_counts.index, region_counts.values, color='green')
+        ax.set_xlabel('Region')
+        ax.set_ylabel('Number of People')
+        ax.set_title('Number of People by Region')
+        plt.xticks(rotation=90)
+        st.pyplot(fig)
 
-# Plot regions where employees are promoted in bar chart
-if 'is_promoted' in df.columns and 'region' in df.columns:
-    promoted_regions = df[df['is_promoted'] == 1]['region'].value_counts()
-    plt.bar(promoted_regions.index, promoted_regions.values, color='purple')
-    plt.xlabel('Region')
-    plt.ylabel('Number of Promoted Employees')
-    plt.title('Regions Where Employees Are Promoted')
-    plt.xticks(rotation=90)
-    plt.legend()
-    plt.show()
+# Education Distribution
+elif selected_chart == "Education Distribution":
+    if 'education' in df.columns:
+        education_counts = df['education'].value_counts()
+        fig, ax = plt.subplots(figsize=(8, 8))
+        ax.pie(education_counts.values, labels=education_counts.index, autopct='%1.1f%%', colors=['gold', 'lightblue', 'lightgreen'])
+        ax.set_title('Education Distribution')
+        st.pyplot(fig)
+
+# Promoted Employees by Region
+elif selected_chart == "Promoted Employees by Region":
+    if 'is_promoted' in df.columns and 'region' in df.columns:
+        promoted_regions = df[df['is_promoted'] == 1]['region'].value_counts()
+        fig, ax = plt.subplots()
+        ax.bar(promoted_regions.index, promoted_regions.values, color='purple')
+        ax.set_xlabel('Region')
+        ax.set_ylabel('Number of Promoted Employees')
+        ax.set_title('Regions Where Employees Are Promoted')
+        plt.xticks(rotation=90)
+        st.pyplot(fig)
