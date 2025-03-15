@@ -139,7 +139,8 @@ elif selected_chart == "Neural Network":
         X_numerical_scaled = scaler.fit_transform(X_numerical)
 
         # Combine numerical and encoded categorical features
-        X_processed = np.hstack((X_numerical_scaled, X_encoded))
+        X_encoded_dense = X_encoded.toarray()
+        X_processed = np.hstack((X_numerical_scaled, X_encoded_dense))
 
         # Split into training and test sets
         X_train, X_test, y_train, y_test = train_test_split(X_processed, y, test_size=0.2, random_state=42)
@@ -151,7 +152,7 @@ elif selected_chart == "Neural Network":
             layers.Dense(1, activation="sigmoid")
         ])
 
-        model.compile(optimizer="adam", loss="binary_crossentropy", metrics=['accuracy'])
+        model.compile(optimizer="adam", loss="binary_crossentropy", metrics=['accuracy','mse'])
 
         # Train the model
         st.subheader("⚙️ Training Model...")
@@ -159,7 +160,7 @@ elif selected_chart == "Neural Network":
             model.fit(X_train, y_train, batch_size=32, epochs=5, validation_split=0.2, verbose=1)
 
         # Evaluate model on test set
-        test_loss, test_acc = model.evaluate(X_test, y_test)
+        test_loss, test_acc ,test_mse = model.evaluate(X_test, y_test)
         predictions = model.predict(X_test)
         y_pred = (predictions > 0.5).astype(int).flatten()
 
