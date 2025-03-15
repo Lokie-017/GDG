@@ -7,6 +7,8 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler,OneHotEncoder
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, classification_report
 import seaborn as sns
+from tensorflow import keras
+from tensorflow.keras import layers
 
 # Load the dataset
 data_path = 'train.csv'
