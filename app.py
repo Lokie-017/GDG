@@ -16,6 +16,7 @@ selected_chart = st.sidebar.selectbox("Select a chart to display:",
 
 # Gender Distribution
 if selected_chart == "Gender Distribution":
+  st.header("NUMBER OF MALES AND FEMALES IN THE DATASET")
     if 'gender' in df.columns:
         gender_counts = df['gender'].value_counts()
         fig, ax = plt.subplots()
