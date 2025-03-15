@@ -19,7 +19,7 @@ st.sidebar.header("🔍 Select a Visualization")
 selected_chart = st.sidebar.selectbox(
     "Choose a chart:", 
     [
-        "KNN"
+        "KNN",
         "Gender Distribution", 
         "Region-wise Employee Count", 
         "Education Level Distribution", 
