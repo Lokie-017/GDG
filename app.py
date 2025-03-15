@@ -9,6 +9,8 @@ from sklearn.metrics import accuracy_score, classification_report
 import seaborn as sns
 from tensorflow import keras
 from tensorflow.keras import layers
+import plotly.express as px
+import os
 
 # Load the dataset
 data_path = 'train.csv'
