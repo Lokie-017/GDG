@@ -2,11 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from google.colab import drive
-
 # Load the dataset
-drive.mount('/content/drive')
-data_path = '/content/drive/MyDrive/train.csv'
+data_path = 'train.csv'
 df = pd.read_csv(data_path)
 
 
