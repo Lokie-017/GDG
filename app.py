@@ -31,7 +31,7 @@ selected_chart = st.sidebar.selectbox(
     ]
 )
 
-elif selected_chart == "KNN":
+if selected_chart == "KNN":
     st.title("Employee Promotion Prediction Using KNN")
     # Upload dataset
     uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
@@ -102,7 +102,7 @@ elif selected_chart == "KNN":
         )
 
 # Gender Distribution
-if selected_chart == "Gender Distribution":
+elif selected_chart == "Gender Distribution":
     if 'gender' in df.columns:
         gender_counts = df['gender'].value_counts()
         fig, ax = plt.subplots()
