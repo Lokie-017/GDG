@@ -19,8 +19,8 @@ st.sidebar.header("🔍 Select a Visualization")
 selected_chart = st.sidebar.selectbox(
     "Choose a chart:", 
     [
-        "K Nearest Neighbor"
-        "Neural Network"
+        "K Nearest Neighbor",
+        "Neural Network",
         "Gender Distribution", 
         "Region-wise Employee Count", 
         "Education Level Distribution", 
