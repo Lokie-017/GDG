@@ -59,10 +59,9 @@ elif selected_chart == "Promoted Employees by Region":
         st.pyplot(fig)
       
 # Recruitment Channel Distribution
-elif selected_chart == "Recruitment Channel Distribution":
-    if 'recruitment_channel' in df.columns:
-        recruitment_counts = df['recruitment_channel'].value_counts()
-        fig, ax = plt.subplots(figsize=(8, 8))
-        ax.pie(recruitment_counts.values, labels=recruitment_counts.index, autopct='%1.1f%%', colors=['red', 'blue', 'green'])
-        ax.set_title('Recruitment Channel Distribution')
-        st.pyplot(fig)
+if 'recruitment_channel' in df.columns:
+  recruitment_counts = df['recruitment_channel'].value_counts()
+  fig, ax = plt.subplots(figsize=(8, 8))
+  ax.pie(recruitment_counts.values, labels=recruitment_counts.index, autopct='%1.1f%%', colors=['red', 'blue', 'green'])
+  ax.set_title('Recruitment Channel Distribution')
+  st.pyplot(fig)
